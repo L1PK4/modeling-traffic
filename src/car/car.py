@@ -1,9 +1,15 @@
 
 from typing import Sequence
 
-from src.settings import allowed_speed
 from src.utils.random import y2
 
+# from src.settings import allowed_speed
+
+allowed_speed = (
+    (110 * 3.6, 90 * 3.6),
+    (90 * 3.6, 70 * 3.6),
+    (85 * 3.6, 60 * 3.6)
+)
 
 class Car:
     id: int
@@ -15,6 +21,9 @@ class Car:
 
     mass: float
     velocity: float
+
+    time: float = 0.
+    crossing: int = 0
 
     def _get_mass(
             self
@@ -34,14 +43,12 @@ class Car:
 
     def __init__(
             self,
-            *,
             id: int,
             name: str,
             lifting: float,
             lifting_range: float,
             spawn_chance: float,
             probability: float,
-            mode: int,
     ):
         self.id = id
         self.name = name
@@ -50,6 +57,14 @@ class Car:
         self.spawn_chance = spawn_chance
         self.probability = probability
         self.mass = self._get_mass()
+    
+    def start(
+            self,
+            mode: int
+    ):
         self.velocity = self._get_initial_velocity(mode)
 
-        
+    # def load_data(self, )
+    
+
+

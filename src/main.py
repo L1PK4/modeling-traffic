@@ -2,32 +2,18 @@ from typing import Sequence
 
 from numpy import log, random
 
+from src.data.data import Data, Datum
+from src.road.road import Road
 from src.settings import *
 
 
-def y2(r: int = 6) -> float:
-    ans = -float(r)
-    for z in range(r * 2):
-        ans += random.random()
-    return ans
-
-
-y3 = y2
-
-
-def ti(l: float = lambda_) -> float:
-    return -log(random.random()) / l
-
-
-def choose_car(
-        chars: Sequence[Sequence[float]] = brand_chars,
-) -> int:
-    return random.choice(
-        10,
-        p=np.array(brand_chars)[:, 2]
-    )
-
-
+def make_experiment(
+        road: Road,
+        time_limit: int = Tk,
+        delta_time: int = dt,
+) -> None:
+    data = Data()
+    new_datum = Datum('')
 
 
 
