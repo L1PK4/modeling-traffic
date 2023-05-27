@@ -1,5 +1,7 @@
 from typing import Sequence
+
 from numpy import log, random
+
 from src.settings import *
 
 
@@ -26,27 +28,8 @@ def choose_car(
     )
 
 
-def get_mass(
-        car_id: int,
-        chars: Sequence[Sequence[float]] = brand_chars
-) -> float:
-    a, sigma = chars[car_id][:2]
-    return y2() * sigma + a
 
 
-def get_mass_velocity(
-        car_id: int,
-        mode: int,
-        chars: Sequence[Sequence[float]] = brand_chars,
-        speeds: Sequence[Sequence[float]] = allowed_speed
-) -> tuple[float, float]:
-    m = get_mass(
-        car_id=car_id,
-        chars=chars
-    )
-    sigma = 20 * 3.6
-    a = speeds[mode][int(m >= 5.5)]
-    return m, y2() * a + sigma
 
 
 def main():
