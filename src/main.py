@@ -5,15 +5,24 @@ from numpy import log, random
 from src.data.data import Data, Datum
 from src.road.road import Road
 from src.settings import *
+from src.utils.random import ti
 
 
 def make_experiment(
         road: Road,
+        cars: list[Car] = cars,
         time_limit: int = Tk,
         delta_time: int = dt,
 ) -> None:
     data = Data()
-    new_datum = Datum('')
+    car = road.generate_car(cars)
+    car.start(road.coating.value)
+    t = 0
+    while t < time_limit:
+        t += ti()
+        car = road.generate_car(cars)
+        car.start(road.coating.value)
+
 
 
 

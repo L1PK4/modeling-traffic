@@ -4,7 +4,7 @@ from typing import Sequence
 
 import numpy as np
 
-from src.car import Car
+from src.car.car import Car
 
 
 class Sign:

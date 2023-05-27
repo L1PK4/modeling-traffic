@@ -1,5 +1,5 @@
 
-from typing import Sequence
+from typing import Self, Sequence
 
 from src.utils.random import y2
 
@@ -21,6 +21,7 @@ class Car:
 
     mass: float
     velocity: float
+    position: float
 
     time: float = 0.
     crossing: int = 0
@@ -34,11 +35,11 @@ class Car:
     
     def _get_initial_velocity(
         self,
-        mode: int,
+        coating: int,
         speeds: Sequence[Sequence[float]] = allowed_speed
     ) -> float:
         sigma = 20 * 3.6
-        a = speeds[mode][int(self.mass >= 5.5)]
+        a = speeds[coating][int(self.mass >= 5.5)]
         return y2(r=1) * a + sigma
 
     def __init__(
@@ -57,12 +58,44 @@ class Car:
         self.spawn_chance = spawn_chance
         self.probability = probability
         self.mass = self._get_mass()
+        self.position = 0
     
     def start(
             self,
-            mode: int
+            coating: int
     ):
-        self.velocity = self._get_initial_velocity(mode)
+        self.velocity = self._get_initial_velocity(coating)
+
+    def move_solo(self, dt: float) -> float:
+        self.position = self.velocity * dt
+        self.time += dt
+        return self.position
+    
+    def reached(
+            self,
+            s: float = 30 * 3.6
+    ) -> bool:
+        return self.position >= s
+    
+    def move(
+            self,
+            other: Self,
+            dt: float,
+            limit: float | None,
+            can_cross: bool,
+
+    ) -> bool:
+        if limit is not None and self.velocity > limit:
+            self.velocity = limit
+        if self.velocity > other.velocity:
+            if can_cross:
+                self.crossing += 1
+                pass 
+            else:
+                self.velocity = other.velocity
+            
+        
+
 
     # def load_data(self, )
     
