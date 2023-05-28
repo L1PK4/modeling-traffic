@@ -3,8 +3,8 @@ from typing import Self, Sequence
 
 import numpy as np
 
-from src.data.data import Datum
-from src.utils.random import y2
+from src.data import Datum
+from src.utils import y2
 
 # from src.settings import allowed_speed
 
@@ -27,7 +27,7 @@ class Car:
     position: float
 
     time: float = 0.
-    velocities: list[float]
+    velocities: list[float] = []
     crossing: int = 0
 
     def _get_mass(
@@ -69,6 +69,7 @@ class Car:
             coating: int
     ):
         self.velocity = self._get_initial_velocity(coating)
+        self.velocities.append(self.velocity)
 
     def move_solo(self, dt: float) -> float:
         self.position = self.velocity * dt
@@ -113,11 +114,6 @@ class Car:
             Datum('Средняя скорость', np.mean(self.velocities))
         ]
         return ans
-            
-        
-
-
-    # def load_data(self, )
     
 
 

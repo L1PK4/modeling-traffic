@@ -4,8 +4,8 @@ from typing import Sequence
 
 import numpy as np
 
-from src.car.car import Car
-from src.data.data import Data
+from src.car import Car
+from src.data import Data
 
 
 class Sign:
@@ -36,7 +36,7 @@ class Road:
     coating: Coating
     lines: Lines
     cars: list[Car] = []
-    signs: dict[float, Sign] = {}
+    signs: dict[int, Sign] = {}
 
     def __init__(
             self,
@@ -57,7 +57,7 @@ class Road:
     ) -> None:
         self.signs = {}
         for it, si in enumerate(signs):
-            self.signs[it * 4] = Sign(*si)
+            self.signs[it] = Sign(*si)
 
     def __len__(
             self
@@ -93,7 +93,7 @@ class Road:
             self,
             car: Car,
     ) -> Sign:
-        return self.signs[car.position // 4000]
+        return self.signs[int(car.position // 4000) + 1]
     
 
     def move(
@@ -101,6 +101,7 @@ class Road:
             dt: float,
             current_idx: int
     ) -> int:
+        print(f'Current index {current_idx}')
         current = self.cars[current_idx]
         next_to_current = self.cars[current_idx - 1]
         sign = self.get_closest_sign(current)
@@ -119,7 +120,20 @@ class Road:
 
     def load_data(
             self,
+            exp_idx: int,
     ):
         data = Data()
-        for car in self.cars
+        cars_data = {}
+        for car in self.cars:
+            car_data = car.load_data()
+            cars_data[car.id] = cars_data
+        name = self.data_name()
+        if (attr := getattr(data, name)) is not None:
+            attr[exp_idx] = cars_data
+            setattr(data, name, attr)
+            return
+        setattr(data, name, cars_data)
+
+    def data_name(self):
+        return f'Data_{self.coating.name}_{self.lines.name}'
 
