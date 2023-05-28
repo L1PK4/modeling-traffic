@@ -75,7 +75,7 @@ class Car:
 
     def move_solo(self, dt: float) -> float:
         self.position += self.velocity * dt
-        self.time += dt
+        # self.time += dt
         self.velocity_sum += self.velocity
         self.steps += 1
         return self.position

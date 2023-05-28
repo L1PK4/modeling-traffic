@@ -23,9 +23,7 @@ def make_experiment(
     idx = 0
     while t < time_limit:
         t += ti()
-        # idx += 1
         car = road.generate_car(cars, t=t)
-        # print(f'Cars currently {len(road.cars)}')
         car.start(road.coating.value)
         while not car.reached():
             idx = road.move(delta_time, current_idx=idx)
@@ -42,7 +40,6 @@ def make_experiments(
         numbers_of_experiments: int = N
         ) ->None:
     for idx in range(numbers_of_experiments):
-        # print(f'Statrting expetiment num {idx}')
         signs_ = signs[lines.value]
         road = Road(
             coating,
@@ -61,7 +58,7 @@ def make_experiments(
 def main():
     data = Data()
     make_experiments(
-        Coating.asphalt,
+        Coating.concrete,
         Lines.twolined,
         numbers_of_experiments=100
     )

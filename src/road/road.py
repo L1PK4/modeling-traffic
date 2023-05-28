@@ -176,14 +176,6 @@ class Road:
     def data_name(self):
         return f'Data_{self.coating.name}_{self.lines.name}'
     
-    def any_reached(
-            self,
-    ) -> bool:
-        for car in self.cars:
-            if car.position >= self.spread:
-                return True
-        return False
-    
     def positions(self) -> list[float]:
         return [car.position for car in self.cars]
     
