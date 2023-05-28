@@ -1,3 +1,4 @@
+import csv
 from typing import Sequence
 
 from numpy import log, random
@@ -61,18 +62,47 @@ def main():
     data = Data()
     make_experiments(
         Coating.asphalt,
-        Lines.onelined,
-        numbers_of_experiments=10
+        Lines.twolined,
+        numbers_of_experiments=100
     )
-    import os
+
+    ensure_results_folder()
+
     from datetime import datetime
+    start = datetime.now()
+    # with open('results/test_exp.json', 'wt', encoding='utf-8') as f:
+    #     f.write(str(data))
+    load_to_csv()
+    print(f"Elapsed 1 {datetime.now() - start}")
+
+
+def ensure_results_folder():
+    import os
     if not os.path.exists('results'):
         os.mkdir('results')
-    start = datetime.now()
 
-    with open('results/test_exp.json', 'wt', encoding='utf-8') as f:
-        f.write(str(data))
-    print(f"Elapsed 1 {datetime.now() - start}")
+def load_to_csv():
+    data = Data()
+    ensure_results_folder()
+    with open('results/data.csv', 'wt', encoding='utf-8') as file:
+        writer =csv.writer(file, delimiter=';')
+        for key, datum in data.items():
+            writer.writerow(["Данные:", key])
+            writer.writerow([
+                "Номер машины",
+                "Кол-во",
+                "Среднее время",
+                "Среднее кол-во обгонов",
+                "Средняя скорость"
+            ])
+            for idx, car_datum in datum.items():
+                writer.writerow([
+                    idx,
+                    car_datum["population"], # type: ignore
+                    car_datum["mean_time"], # type: ignore
+                    car_datum["mean_crossings"], # type: ignore
+                    car_datum["mean_vel"], # type: ignore
+                ])
 
 
 if __name__ == '__main__':
