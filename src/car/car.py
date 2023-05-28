@@ -1,6 +1,9 @@
 
 from typing import Self, Sequence
 
+import numpy as np
+
+from src.data.data import Datum
 from src.utils.random import y2
 
 # from src.settings import allowed_speed
@@ -24,6 +27,7 @@ class Car:
     position: float
 
     time: float = 0.
+    velocities: list[float]
     crossing: int = 0
 
     def _get_mass(
@@ -69,6 +73,7 @@ class Car:
     def move_solo(self, dt: float) -> float:
         self.position = self.velocity * dt
         self.time += dt
+        self.velocities.append(self.velocity)
         return self.position
     
     def reached(
@@ -83,16 +88,31 @@ class Car:
             dt: float,
             limit: float | None,
             can_cross: bool,
-
+            # s: float = 30 * 3.6,
     ) -> bool:
+        crossed = False
+        self.time += dt
         if limit is not None and self.velocity > limit:
             self.velocity = limit
         if self.velocity > other.velocity:
             if can_cross:
                 self.crossing += 1
-                pass 
+                crossed = True 
             else:
                 self.velocity = other.velocity
+        self.move_solo(dt)
+        return crossed
+    
+
+    def load_data(self) -> list[Datum]:
+        ans = [
+            Datum('Номер', self.id),
+            Datum('Время', self.time),
+            Datum('Обгоны', self.crossing),
+            Datum('Скорости', self.velocities),
+            Datum('Средняя скорость', np.mean(self.velocities))
+        ]
+        return ans
             
         
 

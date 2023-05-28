@@ -5,6 +5,7 @@ from typing import Sequence
 import numpy as np
 
 from src.car.car import Car
+from src.data.data import Data
 
 
 class Sign:
@@ -70,6 +71,7 @@ class Road:
     def generate_car(
             self,
             cars: list[Car],
+            t: float,
     ) -> Car:
         n = len(cars)
         probabilities = [
@@ -82,7 +84,42 @@ class Road:
             p=probabilities
         )
         new_car = copy(cars[new_car_idx])
+        new_car.time = t
         self.add_car(new_car)
         return new_car
 
-            
+
+    def get_closest_sign(
+            self,
+            car: Car,
+    ) -> Sign:
+        return self.signs[car.position // 4000]
+    
+
+    def move(
+            self,
+            dt: float,
+            current_idx: int
+    ) -> int:
+        current = self.cars[current_idx]
+        next_to_current = self.cars[current_idx - 1]
+        sign = self.get_closest_sign(current)
+        crossed = current.move(
+            next_to_current,
+            dt,
+            sign.speed_limit,
+            sign.can_cross,
+        )
+        if crossed:
+            self.cars[current_idx] = next_to_current
+            self.cars[current_idx - 1] = current
+            return current_idx - 1
+        return current_idx
+    
+
+    def load_data(
+            self,
+    ):
+        data = Data()
+        for car in self.cars
+

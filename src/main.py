@@ -14,14 +14,18 @@ def make_experiment(
         time_limit: int = Tk,
         delta_time: int = dt,
 ) -> None:
-    data = Data()
-    car = road.generate_car(cars)
+    car = road.generate_car(cars, t=0)
     car.start(road.coating.value)
     t = 0
+    idx = 0
     while t < time_limit:
         t += ti()
-        car = road.generate_car(cars)
+        car = road.generate_car(cars, t=t)
         car.start(road.coating.value)
+        while not car.reached():
+            idx = road.move(delta_time, current_idx=idx)
+        idx += 1
+    road.load_data()
 
 
 
