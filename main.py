@@ -62,10 +62,14 @@ def main():
     make_experiments(
         Coating.asphalt,
         Lines.onelined,
-        numbers_of_experiments=100
+        numbers_of_experiments=10
     )
+    import os
     from datetime import datetime
+    if not os.path.exists('results'):
+        os.mkdir('results')
     start = datetime.now()
+
     with open('results/test_exp.json', 'wt', encoding='utf-8') as f:
         f.write(str(data))
     print(f"Elapsed 1 {datetime.now() - start}")
