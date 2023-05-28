@@ -61,8 +61,8 @@ def main():
     data = Data()
     make_experiments(
         Coating.asphalt,
-        Lines.twolined,
-        numbers_of_experiments=10
+        Lines.onelined,
+        numbers_of_experiments=100
     )
     from datetime import datetime
     start = datetime.now()

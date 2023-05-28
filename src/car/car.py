@@ -26,7 +26,7 @@ class Car:
     position: float
 
     time: float = 0.
-    velocities: list[float] = []
+
 
     def _get_mass(
             self
@@ -61,6 +61,8 @@ class Car:
         self.probability = probability
         self.position = 0
         self.crossing = 0
+        self.velocity_sum: float = 0.
+        self.steps = 0
     
     def start(
             self,
@@ -68,12 +70,14 @@ class Car:
     ):
         self.mass = self._get_mass()
         self.velocity = self._get_initial_velocity(coating)
-        self.velocities.append(self.velocity)
+        self.velocity_sum += self.velocity
+        self.steps += 1
 
     def move_solo(self, dt: float) -> float:
         self.position += self.velocity * dt
         self.time += dt
-        self.velocities.append(self.velocity)
+        self.velocity_sum += self.velocity
+        self.steps += 1
         return self.position
     
     def reached(
@@ -111,7 +115,7 @@ class Car:
             1,
             self.time,
             self.crossing,
-            np.sum(self.velocities),
+            self.velocity_sum / self.steps,
         ]
         return ans
     
@@ -123,7 +127,7 @@ class Car:
             other[0] + 1,
             other[1] + self.time,
             other[2] + self.crossing,
-            other[3] + np.sum(self.velocities),
+            other[3] + self.velocity_sum / self.steps,
         ]
         return other
         

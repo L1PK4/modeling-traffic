@@ -164,6 +164,7 @@ class Road:
         new_dat = {}
         for idx, datum in self.cars_data.items():
             new_dat[idx] = {
+                'population': datum[0],
                 'mean_time': datum[1] / datum[0],
                 'mean_crossings': datum[2] / datum[0],
                 'mean_vel': datum[3] / datum[0]
