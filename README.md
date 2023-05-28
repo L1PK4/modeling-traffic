@@ -5,7 +5,7 @@
 ```powershell
 py -m venv venv
 ./venv/Scripts/activate.ps1
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Запуск
