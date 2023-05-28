@@ -61,13 +61,13 @@ class Car:
         self.lifting_range = lifting_range
         self.spawn_chance = spawn_chance
         self.probability = probability
-        self.mass = self._get_mass()
         self.position = 0
     
     def start(
             self,
             coating: int
     ):
+        self.mass = self._get_mass()
         self.velocity = self._get_initial_velocity(coating)
         self.velocities.append(self.velocity)
 
@@ -79,7 +79,7 @@ class Car:
     
     def reached(
             self,
-            s: float = 30 * 3.6
+            s: float = 30_000
     ) -> bool:
         return self.position >= s
     
@@ -102,7 +102,7 @@ class Car:
             else:
                 self.velocity = other.velocity
         self.move_solo(dt)
-        print(self.position)
+        # print(self.position)
         return crossed
     
 

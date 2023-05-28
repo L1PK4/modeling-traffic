@@ -20,8 +20,11 @@ class Datum(Generic[T]):
         self.ref = type(data)
         self.data = data
 
+
     def __str__(self) -> str:
         return f'{self.name}({self.ref.__name__}): {self.data}'
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 class Data(metaclass=Singleton):

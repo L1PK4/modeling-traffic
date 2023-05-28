@@ -105,6 +105,8 @@ class Road:
             current_idx: int
     ) -> int:
         print(f'Current index {current_idx}')
+        # for car in self.cars:
+        #     print(car.load_data())
         current = self.cars[current_idx]
         next_to_current = self.cars[current_idx - 1]
         sign = self.get_closest_sign(current)
@@ -115,7 +117,7 @@ class Road:
         crossed = current.move(
             next_to_current,
             dt,
-            sign.can_cross if sign is not None else None,
+            sign.speed_limit if sign is not None else None,
             can_cross
         )
         if crossed:
@@ -143,4 +145,15 @@ class Road:
 
     def data_name(self):
         return f'Data_{self.coating.name}_{self.lines.name}'
+    
+    def any_reached(
+            self,
+    ) -> bool:
+        for car in self.cars:
+            if car.position >= self.spread:
+                return True
+        return False
+    
+    def positions(self) -> list[float]:
+        return [car.position for car in self.cars]
 

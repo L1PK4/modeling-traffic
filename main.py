@@ -22,23 +22,24 @@ def make_experiment(
     idx = 0
     while t < time_limit:
         t += ti()
-        idx += 1
+        # idx += 1
         car = road.generate_car(cars, t=t)
         print(f'Cars currently {len(road.cars)}')
         car.start(road.coating.value)
         while not car.reached():
             idx = road.move(delta_time, current_idx=idx)
-        # idx += 1
+            car = road.cars[idx]
+        idx += 1
     road.load_data(exp_index)
 
 
 def make_experiments(
         coating: Coating,
         lines: Lines,
-        spread: float = 30 * 3.6,
-        N: int = N
+        spread: float = 30_000,
+        numbers_of_experiments: int = N
         ) ->None:
-    for idx in range(N):
+    for idx in range(numbers_of_experiments):
         print(f'Statrting expetiment num {idx}')
         signs_ = signs[lines.value]
         road = Road(
@@ -60,7 +61,10 @@ def main():
     make_experiments(
         Coating.asphalt,
         Lines.onelined,
+        numbers_of_experiments=1
     )
+    with open('results/test_exp.json', 'wt', encoding='utf-8') as f:
+        f.write(str(data))
 
 
 if __name__ == '__main__':
