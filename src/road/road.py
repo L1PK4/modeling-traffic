@@ -92,9 +92,12 @@ class Road:
     def get_closest_sign(
             self,
             car: Car,
-    ) -> Sign:
-        return self.signs[int(car.position // 4000) + 1]
-    
+    ) -> Sign | None:
+        try:
+            return self.signs[int(car.position // 4000) + 1]
+        except KeyError:
+            return None
+
 
     def move(
             self,
@@ -105,11 +108,15 @@ class Road:
         current = self.cars[current_idx]
         next_to_current = self.cars[current_idx - 1]
         sign = self.get_closest_sign(current)
+        if sign is not None:
+            can_cross = sign.can_cross
+        else:
+            can_cross = bool(self.lines.value)
         crossed = current.move(
             next_to_current,
             dt,
-            sign.speed_limit,
-            sign.can_cross,
+            sign.can_cross if sign is not None else None,
+            can_cross
         )
         if crossed:
             self.cars[current_idx] = next_to_current
@@ -126,7 +133,7 @@ class Road:
         cars_data = {}
         for car in self.cars:
             car_data = car.load_data()
-            cars_data[car.id] = cars_data
+            cars_data[car.id] = car_data
         name = self.data_name()
         if (attr := getattr(data, name)) is not None:
             attr[exp_idx] = cars_data

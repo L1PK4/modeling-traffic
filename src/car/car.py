@@ -44,7 +44,7 @@ class Car:
     ) -> float:
         sigma = 20 * 3.6
         a = speeds[coating][int(self.mass >= 5.5)]
-        return y2(r=1) * a + sigma
+        return y2(r=1) * sigma + a
 
     def __init__(
             self,
@@ -72,7 +72,7 @@ class Car:
         self.velocities.append(self.velocity)
 
     def move_solo(self, dt: float) -> float:
-        self.position = self.velocity * dt
+        self.position += self.velocity * dt
         self.time += dt
         self.velocities.append(self.velocity)
         return self.position
@@ -102,6 +102,7 @@ class Car:
             else:
                 self.velocity = other.velocity
         self.move_solo(dt)
+        print(self.position)
         return crossed
     
 

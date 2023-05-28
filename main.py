@@ -22,12 +22,13 @@ def make_experiment(
     idx = 0
     while t < time_limit:
         t += ti()
+        idx += 1
         car = road.generate_car(cars, t=t)
         print(f'Cars currently {len(road.cars)}')
         car.start(road.coating.value)
         while not car.reached():
             idx = road.move(delta_time, current_idx=idx)
-        idx += 1
+        # idx += 1
     road.load_data(exp_index)
 
 
