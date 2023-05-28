@@ -1,5 +1,12 @@
 # Моделирование дорожного движения
 
+## Скачать
+
+```powershell
+git clone https://github.com/L1PK4/modeling-traffic
+```
+
+
 ## Предустановки
 
 ```powershell
