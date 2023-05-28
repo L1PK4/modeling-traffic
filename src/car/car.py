@@ -1,17 +1,16 @@
 
-from typing import Self, Sequence
+from typing import Any, Self, Sequence
 
 import numpy as np
 
-from src.data import Datum
 from src.utils import y2
 
 # from src.settings import allowed_speed
 
 allowed_speed = (
-    (110 * 3.6, 90 * 3.6),
-    (90 * 3.6, 70 * 3.6),
-    (85 * 3.6, 60 * 3.6)
+    (110 / 3.6, 90 / 3.6),
+    (90 / 3.6, 70 / 3.6),
+    (85 / 3.6, 60 / 3.6)
 )
 
 class Car:
@@ -28,7 +27,6 @@ class Car:
 
     time: float = 0.
     velocities: list[float] = []
-    crossing: int = 0
 
     def _get_mass(
             self
@@ -42,7 +40,7 @@ class Car:
         coating: int,
         speeds: Sequence[Sequence[float]] = allowed_speed
     ) -> float:
-        sigma = 20 * 3.6
+        sigma = 20 / 3.6
         a = speeds[coating][int(self.mass >= 5.5)]
         return y2(r=1) * sigma + a
 
@@ -62,6 +60,7 @@ class Car:
         self.spawn_chance = spawn_chance
         self.probability = probability
         self.position = 0
+        self.crossing = 0
     
     def start(
             self,
@@ -89,7 +88,7 @@ class Car:
             dt: float,
             limit: float | None,
             can_cross: bool,
-            # s: float = 30 * 3.6,
+            # s: float = 30 / 3.6,
     ) -> bool:
         crossed = False
         self.time += dt
@@ -97,24 +96,37 @@ class Car:
             self.velocity = limit
         if self.velocity > other.velocity:
             if can_cross:
+                # print(f'{self.id} crossed')
                 self.crossing += 1
                 crossed = True 
             else:
                 self.velocity = other.velocity
         self.move_solo(dt)
-        # print(self.position)
+        # # print(self.position)
         return crossed
     
 
-    def load_data(self) -> list[Datum]:
+    def load_data(self) -> list[Any]:
         ans = [
-            Datum('Номер', self.id),
-            Datum('Время', self.time),
-            Datum('Обгоны', self.crossing),
-            Datum('Скорости', self.velocities),
-            Datum('Средняя скорость', np.mean(self.velocities))
+            1,
+            self.time,
+            self.crossing,
+            np.sum(self.velocities),
         ]
         return ans
+    
+    def cumulate(
+            self,
+            other: list[Any],
+    ) -> list[Any]:
+        other = [
+            other[0] + 1,
+            other[1] + self.time,
+            other[2] + self.crossing,
+            other[3] + np.sum(self.velocities),
+        ]
+        return other
+        
     
 
 

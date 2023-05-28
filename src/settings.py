@@ -11,26 +11,26 @@ liftings = (
 )
 
 allowed_speed = (
-    (110 * 3.6, 90 * 3.6),
-    (90 * 3.6, 70 * 3.6),
-    (85 * 3.6, 60 * 3.6)
+    (110 / 3.6, 90 / 3.6),
+    (90 / 3.6, 70 / 3.6),
+    (85 / 3.6, 60 / 3.6)
 )
 
 signs = (
     (
-        (False, 50 * 3.6),
+        (False, 50 / 3.6),
         (False, None),
-        (False, 40 * 3.6),
+        (False, 40 / 3.6),
         (False, None),
-        (False, 60 * 3.6),
+        (False, 60 / 3.6),
         (False, None),
     ),
     (
-        (False, 50 * 3.6),
+        (False, 50 / 3.6),
         (True, None),
-        (False, 40 * 3.6),
+        (False, 40 / 3.6),
         (True, None),
-        (False, 60 * 3.6),
+        (False, 60 / 3.6),
         (True, None),
     )
 )
@@ -73,4 +73,4 @@ regimes = 6
 N = 1000
 lambda_ = .056
 dTb = 3.6
-dv = 20 * 3.6
+dv = 20 / 3.6

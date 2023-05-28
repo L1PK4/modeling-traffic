@@ -1,1 +1,1 @@
-from .data import Data, Datum
+from .data import Data

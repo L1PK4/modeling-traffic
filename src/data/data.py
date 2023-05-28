@@ -1,42 +1,19 @@
 import json
-from typing import Annotated, Generic, Iterator, Type, TypeVar
+from typing import Annotated, Any, Generic, Iterator, Self, Type, TypeVar
 
 from src.utils.singleton import Singleton
-
-T = TypeVar('T')
-
-
-class Datum(Generic[T]):
-    name: str
-    ref: Type[T]
-    data: T
-
-    def __init__(
-            self,
-            name: str,
-            data: T,
-    ):
-        self.name = name
-        self.ref = type(data)
-        self.data = data
-
-
-    def __str__(self) -> str:
-        return f'{self.name}({self.ref.__name__}): {self.data}'
-    def __repr__(self) -> str:
-        return self.__str__()
 
 
 class Data(metaclass=Singleton):
     _data: dict[
         str,
-        dict[int, list[Datum]]
+        dict[int, list[Any]]
     ] = {}
 
-    def __setattr__(self, __name: str, __value: dict[int, list[Datum]]) -> None:
+    def __setattr__(self, __name: str, __value: dict[int, list[Any]]) -> None:
         self._data[__name] = __value
 
-    def __getattr__(self, __name: str) -> dict[int, list[Datum]] | dict[str, dict[int, list[Datum]]] | None:
+    def __getattr__(self, __name: str) -> dict[int, list[Any]] | dict[str, dict[int, list[Any]]] | None:
         if __name == 'data':
             return self._data
         return self._data.get(__name, None)

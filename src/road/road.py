@@ -1,6 +1,6 @@
 from copy import copy
 from enum import Enum
-from typing import Sequence
+from typing import Any, Sequence
 
 import numpy as np
 
@@ -48,6 +48,7 @@ class Road:
         self.coating = coating
         self.lines = lines
         self.spread = spread
+        self.cars_data: dict[int, list[Any]] = {}
         if signs is not None:
             self.parse_signs(signs)
 
@@ -104,9 +105,11 @@ class Road:
             dt: float,
             current_idx: int
     ) -> int:
-        print(f'Current index {current_idx}')
+        # # print(f'Current index {current_idx}')
         # for car in self.cars:
-        #     print(car.load_data())
+        #     # print(car.load_data())
+        if current_idx < 0:
+            return 0
         current = self.cars[current_idx]
         next_to_current = self.cars[current_idx - 1]
         sign = self.get_closest_sign(current)
@@ -127,21 +130,47 @@ class Road:
         return current_idx
     
 
+    # def cumulate(self) -> None:
+    #     data = Data()
+    #     car
+    #     for car in cars:
+
+
+    # def load_data(
+    #         self,
+    #         exp_idx: int,
+    # ):
+    #     data = Data()
+    #     cars_data = {}
+    #     for car in self.cars:
+    #         if car.id in cars_data:
+    #             cars_data[car.id] = cars_data[car.id] + car.load_data()
+    #             continue
+    #         car_data = car.load_data()
+    #         cars_data[car.id] = car_data
+    #     name = self.data_name()
+    #     if (attr := getattr(data, name)) is not None:
+    #         attr[exp_idx] = cars_data
+    #         setattr(data, name, attr)
+    #         return
+    #     setattr(data, name, cars_data)
+
+
     def load_data(
             self,
-            exp_idx: int,
+            exp_idx: int
     ):
         data = Data()
-        cars_data = {}
-        for car in self.cars:
-            car_data = car.load_data()
-            cars_data[car.id] = car_data
-        name = self.data_name()
-        if (attr := getattr(data, name)) is not None:
-            attr[exp_idx] = cars_data
-            setattr(data, name, attr)
-            return
-        setattr(data, name, cars_data)
+        new_dat = {}
+        for idx, datum in self.cars_data.items():
+            new_dat[idx] = {
+                'mean_time': datum[1] / datum[0],
+                'mean_crossings': datum[2] / datum[0],
+                'mean_vel': datum[3] / datum[0]
+            }
+        setattr(data, self.data_name() + f"_{exp_idx}", new_dat)
+        
+
 
     def data_name(self):
         return f'Data_{self.coating.name}_{self.lines.name}'
@@ -156,4 +185,14 @@ class Road:
     
     def positions(self) -> list[float]:
         return [car.position for car in self.cars]
+    
 
+    def load_car_data(self, idx: int) -> None:
+        car = self.cars[idx]
+        if car.id in self.cars_data:
+            self.cars_data[car.id] = car.cumulate(self.cars_data[car.id])
+            return
+        self.cars_data[car.id] = car.load_data()
+
+
+    
